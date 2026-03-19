@@ -1,0 +1,11 @@
+# dependency stuff
+
+venv
+.venv
+
+# caches
+
+__pycache__
+
+
+.vscode

@@ -1,11 +1,8 @@
-# dependency stuff
+# Virtual Environments
 
 venv
 .venv
 
-# caches
+# Caches
 
 __pycache__
-
-
-.vscode

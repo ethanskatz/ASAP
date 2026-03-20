@@ -3,7 +3,7 @@
 import asyncio
 
 from zaber_motion import Units
-from zaber_motion.binary import BinarySettings, Connection
+from zaber_motion.binary import BinarySettings
 from zaber_motion.binary.device import Device
 
 
@@ -45,7 +45,7 @@ def auto_home(
     unit: Units = Units.NATIVE,
     timeout: float = Device.DEFAULT_MOVEMENT_TIMEOUT,
 ) -> list[float] | float:
-    """_summary_.
+    """Test.
 
     :param devices: _description_
     :param max_speed: _description_, defaults to None
@@ -61,10 +61,3 @@ def auto_home(
             timeout=timeout,
         ),
     )
-
-
-if __name__ == "__main__":
-    with Connection.open_serial_port("/dev/ttyUSB0") as conn:
-        devices = conn.detect_devices()
-        devices_to_home = devices[1:5]
-        auto_home(devices=devices_to_home)

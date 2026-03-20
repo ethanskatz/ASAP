@@ -1,0 +1,32 @@
+{
+    "Device1": {
+        "Axis": "StageTheta",
+        "Overrides": {
+            "CommandCode.SET_HOME_SPEED": 1
+        }
+    },
+
+    "Device2": {
+        "Axis": "StageX"
+    },
+
+    "Device3": {
+        "Axis": "StageY"
+    },
+
+    "Device4": {
+        "Axis": "StageZ"
+    },
+
+    "Device5": {
+        "Axis": "Gantry"
+    },
+
+    "Device6": {
+        "Axis": "FrameX"
+    },
+
+    "Device7": {
+        "Axis": "FrameY"
+    }
+}

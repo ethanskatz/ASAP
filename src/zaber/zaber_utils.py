@@ -1,15 +1,42 @@
 """Utilities to assist with controlling zaber motors."""
 
 import asyncio
+import logging
+import time
 
-from zaber_motion import Units
-from zaber_motion.binary import BinarySettings
+from zaber_motion import CommandPreemptedException, Units
+from zaber_motion.binary import BinarySettings, CommandCode, Connection
 from zaber_motion.binary.device import Device
 
 MAX_SPEED_ERROR = "Parameter max_speed must be greater than zero."
 """_summary_"""
 RUNTIME_EXISTS_ERROR = "Active asyncio event loop exists. Use async version."
 """_summary_"""
+
+_logger = logging.getLogger(__name__)
+
+
+def get_devices(
+    conn: Connection,
+    *,
+    timeout: float = 0.5,
+    retries: int = 3,
+) -> list[Device]:
+
+    conn.generic_command_no_response(0, CommandCode.STOP)
+
+    devices = None
+    error = BaseException
+    for _ in range(retries):
+        try:
+            devices = conn.detect_devices()
+            break
+        except CommandPreemptedException as err:
+            time.sleep(timeout)
+            error = err
+    if devices is None:
+        raise error
+    return devices
 
 
 async def auto_home_async(
@@ -34,13 +61,16 @@ async def auto_home_async(
     if max_speed is not None:
         if max_speed <= 0:
             raise ValueError(MAX_SPEED_ERROR)
-
-        for device in devices:
-            device.settings.set(
-                BinarySettings.HOME_SPEED,
-                value=max_speed,
-                unit=unit,
-            )
+        await asyncio.gather(
+            *[
+                device.settings.set_async(
+                    BinarySettings.HOME_SPEED,
+                    value=max_speed,
+                    unit=unit,
+                )
+                for device in devices
+            ],
+        )
 
     return await asyncio.gather(
         *[device.home_async(unit=unit, timeout=timeout) for device in devices],

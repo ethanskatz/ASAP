@@ -17,6 +17,7 @@ def main() -> None:
     # Read config.json and save settings
     with Connection.open_serial_port("/dev/cu.usbserial-AB0LDNKK") as conn:
         devices = get_devices(conn)
+
         _placeholder_apply_configs()
         devices_to_home = devices[1:5]
         print(

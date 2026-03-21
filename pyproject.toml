@@ -1,37 +1,25 @@
 [project]
 name = "asap"
 version = "0.1.0"
-description = ""
+description = "Add your description here"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.14"
+dependencies = [
+    "pytest>=9.0.2",
+    "zaber-motion>=8.4.0",
+]
 authors = [
     {name = "Ethan Katz"}
-]
-license = {text = "Apache-2.0"}
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "zaber-motion (>=8.4.0,<9.0.0)"
 ]
 
 [dependency-groups]
 dev = [
-    "pytest (>=9.0.2,<10.0.0)"
+    "basedpyright>=1.38.3",
+    "pytest>=9.0.2",
+    "ruff>=0.15.7",
 ]
 
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-
-[tool.poetry]
-package-mode = false
-
 [tool.ruff]
-line-length = 79
-target-version = "py310"
-lint.select = ["ALL"]
-lint.ignore = ["E501"]  # Black handles line length
-src = ["backend"]
 
-[tool.ruff.isort]
-known-first-party = ["backend"]
+[tool.ruff.lint]

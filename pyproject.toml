@@ -20,6 +20,10 @@ dev = [
     "ruff>=0.15.7",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
 [tool.basedpyright]
 include = ["src", "tests"]
 # exclude = [".venv", ".ruff_cache"]

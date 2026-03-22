@@ -23,6 +23,18 @@ jobs:
         python -m pip install uv
         uv sync
 
-    - name: Test with pytest
+    - name: Run Pytest Tests
       run: |
-        uv run basedpyright
+        uv run pytest
+
+    - name: Run BasedPyright Checks
+      run: |
+        uv run basedpyright src tests
+    
+    - name: Run Ruff Lint
+      run: |
+        uv run ruff src tests
+
+    - name: Run Docstring Checks
+      run: |
+        uv run docsig src tests

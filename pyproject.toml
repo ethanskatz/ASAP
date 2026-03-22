@@ -4,22 +4,26 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.14"
-dependencies = [
-    "pytest>=9.0.2",
-    "zaber-motion>=8.4.0",
-]
 authors = [
     {name = "Ethan Katz"}
+]
+requires-python = ">=3.12"
+dependencies = [
+    "zaber-motion>=8.4.0",
 ]
 
 [dependency-groups]
 dev = [
     "basedpyright>=1.38.3",
+    "docsig>=0.81.1",
     "pytest>=9.0.2",
     "ruff>=0.15.7",
 ]
 
-[tool.ruff]
+[tool.basedpyright]
+include = ["src", "tests"]
+# exclude = [".venv", ".ruff_cache"]
+typeCheckingMode = "recommended"
 
-[tool.ruff.lint]
+[tool.ruff]
+lint.select = ["ALL"]

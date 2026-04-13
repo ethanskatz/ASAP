@@ -253,7 +253,7 @@ class MotorCameraGUI(tk.Tk):
     # Input handling
     # -------------------------
     def _bind_keys(self):
-        self.bind("<Up>", lambda event: self.on_arrow_key("Up"))
+        self.bind("<KeyPress-Up>", lambda event: self.on_arrow_key("Up"))
         self.bind("<Down>", lambda event: self.on_arrow_key("Down"))
         self.bind("<Left>", lambda event: self.on_arrow_key("Left"))
         self.bind("<Right>", lambda event: self.on_arrow_key("Right"))

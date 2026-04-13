@@ -95,7 +95,7 @@ def auto_home(
     :return: _description_
     """
     try:
-        asyncio.get_running_loop()
+        _ = asyncio.get_running_loop()
     except RuntimeError:
         return asyncio.run(
             auto_home_async(
@@ -107,3 +107,7 @@ def auto_home(
         )
     else:
         raise RuntimeError(RUNTIME_EXISTS_ERROR)
+
+
+async def move_stepped(device: Device) -> None:
+    pass

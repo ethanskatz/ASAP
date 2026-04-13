@@ -1,12 +1,12 @@
 # Virtual Environments
-
 venv
 .venv
 
 # Caches
-
 __pycache__
 .pytest_cache
 .ruff_cache
 
+# Configuration Files
+.vscode
 config.json

@@ -1,47 +1,138 @@
 import tkinter as tk
-from tkinter import Menu
+from tkinter import ttk
 
-root = tk.Tk()
-root.title("Menu + Left/Right Frames")
-root.geometry("1200x800")
+from src.gui.gui_plugins import MotorControlWidget
+from src.gui.gui_utils import SizeableButton
 
-# ---------------- Menu Bar ----------------
-menubar = Menu(root)
-file_menu = Menu(menubar, tearoff=0)
-file_menu.add_command(label="Open")
-file_menu.add_command(label="Exit", command=root.quit)
-menubar.add_cascade(label="File", menu=file_menu)
-root.config(menu=menubar)
 
-# ---------------- Main Frames ----------------
-# Use a container frame for the left + right area
-main_frame = tk.Frame(root)
-main_frame.grid(row=0, column=0, sticky="nsew")
+class GUI(tk.Tk):
+    def __init__(self) -> None:
+        super().__init__()
 
-# Left window (resizable)
-left_frame = tk.Frame(main_frame, bg="lightblue", bd=2, relief="sunken")
-left_frame.grid(row=0, column=0, sticky="nsew")
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
 
-# Right frame (fixed width or resizable)
-right_frame = tk.Frame(
-    main_frame,
-    bg="lightgreen",
-    bd=2,
-    relief="sunken",
-    width=200,
-)
-right_frame.grid(row=0, column=1, sticky="ns")
+        self.title("ASAP Controller")
+        self.geometry("1200x800")
+        style = ttk.Style()
+        style.theme_use("classic")
 
-# ---------------- Grid Configuration ----------------
-root.grid_rowconfigure(0, weight=1)  # main_frame grows vertically
-root.grid_columnconfigure(0, weight=1)  # main_frame grows horizontally
+        self._build_layout()
+        self._enable_bindings()
 
-main_frame.grid_rowconfigure(0, weight=1)  # left_frame grows vertically
-main_frame.grid_columnconfigure(0, weight=1)  # left_frame grows horizontally
-main_frame.grid_columnconfigure(1, weight=0)  # right_frame keeps fixed width
+    def _build_layout(self) -> None:
+        _ = self.rowconfigure(1, weight=1)
+        _ = self.columnconfigure(0, weight=1, minsize=300)
+        _ = self.columnconfigure(1, weight=2)
 
-# ---------------- Example Content ----------------
-tk.Label(left_frame, text="Left Window").pack(expand=True)
-tk.Label(right_frame, text="Right Frame").pack(expand=True)
+        self.menu_frame: ttk.Frame = ttk.Frame(
+            self,
+            border=2,
+            relief="raised",
+        )
+        self.menu_frame.grid(row=0, column=0, columnspan=2, sticky="new")
+        self.home_button: SizeableButton = SizeableButton(
+            self.menu_frame,
+            width=60,
+            height=60,
+        )
+        self.home_button.grid(row=0, column=0, sticky="nsw")
+        self.stop_button: SizeableButton = SizeableButton(
+            self.menu_frame,
+            height=60,
+            width=60,
+        )
+        self.stop_button.grid(row=0, column=1, sticky="nsw")
 
-root.mainloop()
+        self.camera_frame: ttk.Frame = ttk.Frame(self, border=2, relief="raised")
+        self.camera_frame.grid(row=1, column=0, sticky="nsew")
+        # self.camera_frame.grid_propagate(flag=False)
+
+        """self.camera_canvas: tk.Canvas = tk.Canvas(
+            self.camera_frame,
+            bg="black",
+            highlightthickness=0,
+        )
+        self.camera_canvas.pack(anchor="n", fill="x")"""
+
+        options_frame = ttk.Frame(self, border=2, relief="raised")
+        options_frame.grid(row=1, column=1, sticky="nsew")
+        options_frame.columnconfigure(0, weight=1)
+        options_frame.rowconfigure(0, weight=1)
+        options_frame.rowconfigure(4, weight=1)
+
+        stage_frame = ttk.LabelFrame(options_frame, text="Stage")
+        stage_frame.grid(row=1, column=0, pady=10)
+
+        self.stage_x = MotorControlWidget(
+            stage_frame,
+            motor=None,
+            text="X-Axis",
+            motion_type="linear",
+        )
+        self.stage_x.grid(row=0, column=0)
+        self.stage_y = MotorControlWidget(
+            stage_frame,
+            motor=None,
+            text="Y-Axis",
+            motion_type="linear",
+        )
+        self.stage_y.grid(row=1, column=0)
+        self.stage_theta = MotorControlWidget(
+            stage_frame,
+            motor=None,
+            text="Theta-Axis",
+            motion_type="angular",
+        )
+        self.stage_theta.grid(row=2, column=0)
+
+        frame_frame = ttk.LabelFrame(options_frame, text="Frame")
+        frame_frame.grid(row=2, column=0, pady=10)
+
+        self.stage_x = MotorControlWidget(
+            frame_frame,
+            motor=None,
+            text="X-Axis",
+            motion_type="linear",
+        )
+        self.stage_x.grid(row=0, column=0)
+        self.stage_y = MotorControlWidget(
+            frame_frame,
+            motor=None,
+            text="Y-Axis",
+            motion_type="linear",
+        )
+        self.stage_y.grid(row=1, column=0)
+
+        z_gantry_frame = ttk.LabelFrame(options_frame, text="Gantry, Z Axis")
+        z_gantry_frame.grid(row=3, column=0, pady=10)
+
+        self.stage_x = MotorControlWidget(
+            z_gantry_frame,
+            motor=None,
+            text="Gantry",
+            motion_type="linear",
+        )
+        self.stage_x.grid(row=0, column=0)
+        self.stage_y = MotorControlWidget(
+            z_gantry_frame,
+            motor=None,
+            text="Z-Axis",
+            motion_type="linear",
+        )
+        self.stage_y.grid(row=1, column=0)
+
+        # add play button to resume
+
+    def _enable_bindings(self) -> None:
+        self.camera_frame.bind("<Configure>", self._resize_camera)
+
+    def _resize_camera(self, event):
+        size = event.width
+        """self.camera_canvas.delete("all")
+        self.camera_canvas.create_rectangle(0, 0, size, size, fill="black")"""
+
+
+if __name__ == "__main__":
+    app = GUI()
+    app.mainloop()

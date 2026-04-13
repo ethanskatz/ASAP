@@ -10,9 +10,6 @@ def _placeholder_apply_configs() -> None:
     pass
 
 
-del auto_home
-
-
 def main() -> None:
     # Read config.json and save settings
     with Connection.open_serial_port("/dev/cu.usbserial-AB0LDNKK") as conn:
@@ -26,7 +23,7 @@ def main() -> None:
                 unit=Units.VELOCITY_MILLIMETRES_PER_SECOND,
             ),
         )
-        # auto_home(devices=devices_to_home)
+        auto_home(devices=devices_to_home)
 
 
 if __name__ == "__main__":
